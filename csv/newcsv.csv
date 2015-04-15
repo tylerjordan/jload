@@ -1,0 +1,4 @@
+hostname,loopback_ip,access_intf,access_ip,core_intf,core_ip,admin_user,mgmt_ip
+vmx1,10.0.0.1/32,ge-0/0/10,10.10.10.1/32,ge-0/0/11,10.10.10.2/32,nocadmin,10.92.18.61
+vmx2,10.0.0.2/32,ge-0/0/10,20.20.20.1/32,ge-0/0/11,20.20.20.2/32,nocadmin,10.92.18.119
+vmx3,10.0.0.3/32,ge-0/0/10,30.30.30.1/32,ge-0/0/11,30.30.30.2/32,cbpadmin,10.92.18.55
