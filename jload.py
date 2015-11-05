@@ -53,7 +53,7 @@ def getCSVHeaders(csvfile):
 
 def printProgress(logtype,hostname,message):
 	print("%s:%s:%s")%(logtype,hostname,message)
-	
+
 def deployConfig(my_device_list_dict, my_username, my_password, my_config_template_file):
 	my_hostname=""
 	try:
@@ -87,8 +87,7 @@ def deployConfig(my_device_list_dict, my_username, my_password, my_config_templa
 		printProgress("ERROR",my_hostname,"Encountered exception while deploying config")
 		printProgress("ERROR",my_hostname,str(err))
 		return False
-		
-		
+
 def main():
 	print("\nWelcome to Junos Configuration Deployment Tool \n")
 	#Get CSV File Name
@@ -99,8 +98,8 @@ def main():
 	template_file = getOptionAnswer("Choose a template file", fileList)
 	template_file = template_path + template_file
 	# Get username and password parameters
-	username=getInputAnswer("\nEnter your device username")
-	password=getpass(prompt="\nEnter your device password: ")
+	username = getInputAnswer("\nEnter your device username")
+	password = getpass(prompt="\nEnter your device password: ")
 	# Import CSV into array
 	row_csv_list = importCsv(csv_path + csv_file)
 	header_csv_list = getCSVHeaders(csv_path + csv_file)
@@ -116,6 +115,6 @@ def main():
 		else:
 			printProgress("ERROR",device_list_dict["hostname"],"Config deployment failed!")
 		print("")
-			
+
 if __name__ == '__main__':
 	main()
