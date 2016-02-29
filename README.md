@@ -1,4 +1,7 @@
-# JLOAD - Juniper Configuration Deployment Script
+# JLOAD 
+
+### Juniper Configuration Deployment Script
+
 ## Author: Tyler Jordan
 
 # ABOUT
@@ -21,4 +24,9 @@ JLoad is a template loading program that was adapted from a YouTube video. The p
 3. Create a template file
 4. Add the template file to the "template" folder in jload
 5. Run script file > python jload.py
+
+# CONTRIBUTORS
+
+[Tyler Jordan](https://github.com/tjordan) - Creator
+[Steve Steiner](https://github.com/ntwrkguru) - Ported to Docker
 
