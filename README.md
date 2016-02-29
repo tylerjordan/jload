@@ -2,8 +2,6 @@
 
 ### Juniper Configuration Deployment Script
 
-## Author: Tyler Jordan
-
 # ABOUT
 
 What is JLoad?
