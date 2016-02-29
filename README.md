@@ -25,6 +25,7 @@ JLoad is a template loading program that was adapted from a YouTube video. The p
 
 # CONTRIBUTORS
 
-[Tyler Jordan](https://github.com/tjordan) - Creator
+[Tyler Jordan](https://github.com/tylerjordan) - Creator
+
 [Steve Steiner](https://github.com/ntwrkguru) - Ported to Docker
 
