@@ -13,9 +13,6 @@ from jnpr.junos.utils.config import Config
 from lxml import etree
 from getpass import getpass
 
-csv_path = '.\\csv\\'
-template_path = '.\\template\\'
-
 def importCsv(csvfile):
 	try:
 		my_file = open(csvfile)
@@ -66,7 +63,7 @@ def deployConfig(my_device_list_dict, my_username, my_password, my_config_templa
 		printProgress("INFO",my_hostname,"Going to load template the config now.")
 		
 		# Determine if template file is in "set" or "bracketed" format
-		if(isSet(my_config_template_file)):
+		if isSet(my_config_template_file):
 			rsp=cu.load(template_path=my_config_template_file,format='set',template_vars=my_device_list_dict)
 		else:
 			rsp=cu.load(template_path=my_config_template_file,template_vars=my_device_list_dict)
@@ -90,10 +87,18 @@ def deployConfig(my_device_list_dict, my_username, my_password, my_config_templa
 
 def main():
 	print("\nWelcome to Junos Configuration Deployment Tool \n")
-	#Get CSV File Name
+	# Try to get correct path format, checks for Windows or Linux
+	try:
+		path_list = getSystemPaths()
+		csv_path = path_list['csv_path']
+		template_path = path_list['template_path']		
+	except Exception, e:
+		print "Unable to determine platform. Exiting..."
+		exit()
+	# Get CSV File Name
 	fileList = getFileList(csv_path)
 	csv_file = getOptionAnswer("Choose a csv file", fileList)
-	#Get Config Template
+	# Get Config Template
 	fileList = getFileList(template_path)
 	template_file = getOptionAnswer("Choose a template file", fileList)
 	template_file = template_path + template_file

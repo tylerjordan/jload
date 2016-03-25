@@ -7,6 +7,7 @@ import sys
 import fileinput
 import glob
 import code
+import platform
 
 from os import listdir
 from os.path import isfile, join
@@ -83,6 +84,21 @@ def getFileList(mypath):
 		if isfile(join(mypath,afile)):
 			fileList.append(afile)
 	return fileList
+
+# Return correctly formatted paths for Windows or Linux
+def getSystemPaths():
+    path_list = {}
+    if platform.system() == 'Linux':
+		path_list = {
+				'csv_path': './csv/',
+				'template_path': './template/',
+		}
+    elif platform.system() == 'Windows':
+		path_list = {
+				'csv_path': '.\\csv\\',
+				'template_path': '.\\template\\',
+		}
+    return path_list
 
 # Method for requesting IP address target
 def getTarget():
