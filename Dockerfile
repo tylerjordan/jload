@@ -1,8 +1,6 @@
-FROM juniper/pyez:latest
+FROM juniper/pyez:alpine
 
 MAINTAINER ntwrkguru@gmail.com
 
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get install -y git \
+RUN apk update && apk add git \
 && git clone https://github.com/tylerjordan/jload.git
