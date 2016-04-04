@@ -20,7 +20,7 @@ JLoad is a template loading program that was adapted from a YouTube video. The p
 # DOCKER
 This is also available in a ready-to-run Docker container. Simply grab it from the Docker hub:
 
-`docker run -it ntwrkguru/jload /bin/bash`
+`docker run -it ntwrkguru/jload /bin/sh`
 
 # USAGE
 
