@@ -1,7 +1,7 @@
 # File: jload.py
 # Author: Tyler Jordan
-# Modified: 4/15/2015
-# Purpose: Assist CBP engineers with Juniper configuration tasks
+# Modified: 2/17/2023
+# Purpose: Assist engineers with Juniper configuration tasks
 
 import sys, fileinput, code, re, csv
 
@@ -61,65 +61,67 @@ def deployConfig(my_device_list_dict, my_username, my_password, my_config_templa
 	dev = Device(my_hostname, user=my_username, password=my_password)
 
 	# Attempt to connect to device
-	printProgress("INFO (", my_hostname, ") Connecting to device through netconf.")
+	printProgress("INFO ", my_hostname, " Connecting to device through netconf.")
 	try:
 		dev.open()
 		dev.timeout = 60
 		cu = Config(dev)
 	except ConnectError as err:
-		printProgress("ERROR (", my_hostname, ") Problem connecting to device: " + err)
+		printProgress("ERROR ", my_hostname, err)
 		return False
 
 	# Attempt to load the template config
-	printProgress("INFO (", my_hostname, ") Loading the template config.")
+	printProgress("INFO ", my_hostname, " Loading the template config.")
 	# Determine if template file is in "set" or "bracketed" format and attempt to load
 	if isSet(my_config_template_file):
 		try:
 			cu.load(template_path=my_config_template_file, format='set', template_vars=my_device_list_dict)
 		except ConfigLoadError as err:
-			printProgress("ERROR (", my_hostname, ") Problem loading 'set' config: " + err)
+			printProgress("ERROR SET", my_hostname, err)
 			return False
 	else:
 		try:
 			cu.load(template_path=my_config_template_file, template_vars=my_device_list_dict)
 		except ConfigLoadError as err:
-			printProgress("ERROR (", my_hostname,  ") Problem loading config: " + err)
+			printProgress("ERROR HIER(", my_hostname, err)
 			return False
 
 	# Performing Diff
-	printProgress("INFO (", my_hostname, ") Performing diff between active and candidate config.")
+	printProgress("INFO ", my_hostname, " Performing diff between active and candidate config.")
 	cu.pdiff()
-	printProgress("INFO (", my_hostname, ") Performing commit check")
+	printProgress("INFO ", my_hostname, " Performing commit check")
 
 	# Attempt to commit the changes
 	try:
 		cu.commit_check()
 		commit_status = cu.commit()
 	except CommitError as err:
-		printProgress("ERROR (", my_hostname, ") Problem committing: " + err)
+		printProgress("ERROR ", my_hostname, err)
 		dev.close()
 		return False
 
 	# Close connection and return to main
-	printProgress("INFO (", my_hostname, ") Disconnecting from device.")
+	printProgress("INFO ", my_hostname, " Disconnecting from device.")
 	dev.close()
 	return commit_status
 
 def templateBreak(template_file):
 	device_list = []
-	new_file = open("tmp_file.conf", "w")
+	myfile = "tmp_file.conf"
+	new_file = open(myfile, "w")
 	with open(template_file, 'r') as tfile:
 		for line in tfile:
 			if line[0] == '#':
 				dl = line.split(",")
 				for i in dl:
-					str(i).replace(' ','')
-					str(i).replace('#','')
-					device_list.append(i)
+					newstr = i.replace(' ','')
+					newstr = newstr.replace('#','')
+					newstr = newstr.replace('\n','')
+					device_list.append(newstr)
 			else:
 				new_file.write(line)
 		new_file.close()
-		return new_file, device_list
+		return myfile, device_list
 
 def main():
 	print("\nWelcome to Junos Configuration Deployment Tool \n")
@@ -144,7 +146,7 @@ def main():
 	fileList = getFileList(template_path)
 	template_file = getOptionAnswer("Choose a template file", fileList)
 	template_file = template_path + template_file
-	new_file, dl = templateBreak(template_file)
+	myfile, dl = templateBreak(template_file)
 
 	# Get username and password parameters
 	username = getInputAnswer("\nEnter your device username")
@@ -157,12 +159,12 @@ def main():
 			device_list_dict[h]=i[rownum]
 			rownum += 1
 		# Check if the hostname is in the list of hostnames provided
-		if h in dl:
-			if deployConfig(device_list_dict, username, password, template_file):
+		if device_list_dict["hostname"] in dl:
+			if deployConfig(device_list_dict, username, password, myfile):
 				printProgress("INFO", device_list_dict["hostname"], "Successfully deployed config on device.")
 			else:
 				printProgress("ERROR", device_list_dict["hostname"], "Config deployment failed!")
-		else:
+		else:		
 			printProgress("SKIP", device_list_dict["hostname"], "Device not in list!")
 		print("")
 
